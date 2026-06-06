@@ -1,36 +1,21 @@
-export type RiskProfile = 'Conservative' | 'Moderate' | 'Aggressive';
+export type RiskProfile = 'Very Low' | 'Low' | 'Medium';
 
-export type InvestmentGoal = 'Learn Investing' | 'Wealth Growth' | 'Long-Term Savings';
-
-export interface UserProfile {
-  savingsAmount: number;
-  goal: InvestmentGoal;
-  simulationCompleted: boolean;
-}
-
-export interface Stock {
+export interface InvestmentOption {
   id: string;
   name: string;
-  price: number;
-  change: number; // Daily change %
-  riskLevel: RiskProfile;
-  minInvestment: number;
-  returnMin: number;
-  returnMax: number;
+  risk: RiskProfile;
+  gainMin: number;
+  gainMax: number;
   lossMin: number;
   lossMax: number;
   holdingPeriod: string;
   description: string;
-  whyInvest: string;
-  keyRisks: string;
+  whyChoose: string;
+  recommendedFor: string;
 }
 
-export interface PortfolioItem {
-  id: string;
-  stockId: string;
-  stockName: string;
-  amountInvested: number;
-  riskLevel: RiskProfile;
-  purchaseDate: string;
-  mockPerformance: number; // simulated % gain or loss
+export interface UserProfile {
+  savingsAmount: number;
+  selectedOptionId?: string;
+  investedAmount?: number;
 }
