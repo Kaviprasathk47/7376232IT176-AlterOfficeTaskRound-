@@ -1,0 +1,98 @@
+# Product Note – FirstStep Invest
+
+## User
+
+For this prototype, I designed the product for Arun, a 20-year-old college student who has never invested before.
+
+Arun has some savings (around ₹3,000–₹5,000) and is interested in investing, but he has never taken the first step. He is not looking for advanced trading tools. His primary concern is understanding what could happen to his money if he invests.
+
+---
+
+## Problem
+
+Many investment platforms are built for people who already understand investing. They focus on trading, charts, and returns.
+
+For a first-time investor, the biggest obstacle is often not opening an account or finding an investment option. It is uncertainty.
+
+Questions such as:
+
+* What am I investing in?
+* How much money could I lose?
+* Is this investment suitable for someone like me?
+* How long should I keep my money invested?
+
+often remain unanswered.
+
+As a result, many potential investors leave before making their first investment decision.
+
+---
+
+## What I Built
+
+I built **FirstStep Invest**, a focused 5-screen web prototype that helps a first-time investor understand possible gains and losses before making a mock investment decision.
+
+The prototype allows the user to:
+
+1. Explore three simple investment options.
+2. Compare risk, potential gains, potential losses, and holding periods.
+3. View best-case, expected, and worst-case outcomes for a mock investment amount.
+4. Acknowledge investment risk before proceeding.
+5. Complete a mock investment decision and reflect on their confidence level.
+
+The experience is intentionally simple and designed for users with little or no investment knowledge.
+
+---
+
+## What I Chose Not to Build
+
+To keep the scope focused on the user's primary problem, I intentionally excluded:
+
+* Real investing functionality
+* Trading features
+* Intraday trading
+* Futures and options
+* Margin trading
+* Portfolio management
+* Market news
+* KYC flows
+* Payment integration
+* Broker integration
+* Advanced charts and analytics
+
+These features are valuable for experienced investors but do not help a first-time investor overcome the fear and uncertainty of making an initial investment decision.
+
+---
+
+## Why This Approach
+
+The assignment emphasized building one small journey for one real user.
+
+Instead of building a simplified trading application, I focused on helping a beginner answer a single question:
+
+**"What could happen to my money if I invest it?"**
+
+By making potential losses visible alongside potential gains, the prototype encourages informed decision-making rather than return chasing.
+
+---
+
+## What I Would Build Next
+
+If given additional time, I would expand the product with:
+
+* Goal-based investment recommendations
+* Personalized investment suggestions
+* Risk preference profiling
+* Progress tracking for new investors
+* Beginner-friendly portfolio guidance
+
+These additions would help users move from understanding their first investment decision to building long-term investing habits.
+
+---
+
+## How I Used AI
+
+I used AI-assisted tools to accelerate ideation, content generation, UI scaffolding, and rapid prototyping.
+
+AI helped generate and refine interface components, mock investment data, and product copy, while product decisions, scope definition, user selection, prioritization, and overall product direction were determined manually.
+
+The primary use of AI was to speed up execution so more time could be spent on understanding the user problem and refining the experience.
