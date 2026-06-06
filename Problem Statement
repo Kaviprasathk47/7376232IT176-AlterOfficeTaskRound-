@@ -1,0 +1,17 @@
+Problem Statement :
+  Target Profile/User:
+      Balan(22 years old)
+  Problem           : He have a amount of Rupees 5000 and eager in investing.But the core problem is the fear of lossing the money 
+                      due to inadequate knowledge in investing and low confidence in assurance of his money
+  Traditional Cases:  In more of the FinTech Applications, the first time users got frustrated due high cognitive load and 
+                      feels discomfort in the investement due to low konwlegdge in trading or investing money.They simply 
+                      opens the application and visualizing the stocks.He doesn't  even know what stock should he want to use 
+                      to grow the money and how should be the process and random investing takes place and the outcome becomes 
+                      loss or user frustration and leave the application.The main problem is he had the interst and splending money
+                      on investing but he doesn't know the flow
+Scope and Solution:   To solve this we made  a application rather than the traditional application.FirstStep Invest shifts the focus from 
+                      transaction mechanics (buying/selling) to risk transparency. The prototype scaffolds a low-friction, 5-screen guided
+                      journey that balances potential gains with highly visible, equal-weighted potential losses. By breaking down jargon into inline, bite-sized contextual definitions,
+                      it eliminates cognitive overload and builds structural confidence, allowing the user to complete their first simulated investment decision with total clarity.
+  
+        
