@@ -36,13 +36,12 @@ export const Navbar: React.FC<NavbarProps> = ({
           </span>
         </div>
 
-        {/* Tab Navigation (only active if user completed onboarding) */}
-        {userProfile && (
+        {userProfile && isJourneyDone && (
           <nav className="hidden md:flex items-center gap-1.5 bg-slate-150 rounded-xl p-1 text-xs">
             <button
               onClick={() => onNavigate('explorer')}
               className={`flex items-center gap-1.5 px-3 py-2 font-bold rounded-lg transition-all cursor-pointer ${
-                currentScreen === 'explorer' || currentScreen === 'understand' || currentScreen === 'simulator' || currentScreen === 'readiness'
+                currentScreen === 'explorer' || currentScreen === 'detail' || currentScreen === 'confirmation'
                   ? 'bg-white text-slate-900 shadow-sm'
                   : 'text-slate-500 hover:text-slate-900'
               }`}
@@ -50,48 +49,30 @@ export const Navbar: React.FC<NavbarProps> = ({
               <Compass className="w-3.5 h-3.5" />
               Explore
             </button>
-            {!isJourneyDone && (
-              <button
-                onClick={() => onNavigate('walkthrough')}
-                className={`flex items-center gap-1.5 px-3 py-2 font-bold rounded-lg transition-all cursor-pointer ${
-                  currentScreen === 'walkthrough'
-                    ? 'bg-white text-slate-900 shadow-sm'
-                    : 'text-slate-500 hover:text-slate-900'
-                }`}
-              >
-                <BookOpen className="w-3.5 h-3.5" />
-                Journey Guide
-              </button>
-            )}
-            {isJourneyDone && (
-              <>
-                <button
-                  onClick={() => onNavigate('dashboard')}
-                  className={`flex items-center gap-1.5 px-3 py-2 font-bold rounded-lg transition-all cursor-pointer ${
-                    currentScreen === 'dashboard'
-                      ? 'bg-white text-slate-900 shadow-sm'
-                      : 'text-slate-500 hover:text-slate-900'
-                  }`}
-                >
-                  <LayoutDashboard className="w-3.5 h-3.5" />
-                  Dashboard
-                </button>
-                <button
-                  onClick={() => onNavigate('insights')}
-                  className={`flex items-center gap-1.5 px-3 py-2 font-bold rounded-lg transition-all cursor-pointer ${
-                    currentScreen === 'insights'
-                      ? 'bg-white text-slate-900 shadow-sm'
-                      : 'text-slate-500 hover:text-slate-900'
-                  }`}
-                >
-                  <BrainCircuit className="w-3.5 h-3.5" />
-                  Coach Insights
-                </button>
-              </>
-            )}
+            <button
+              onClick={() => onNavigate('dashboard')}
+              className={`flex items-center gap-1.5 px-3 py-2 font-bold rounded-lg transition-all cursor-pointer ${
+                currentScreen === 'dashboard'
+                  ? 'bg-white text-slate-900 shadow-sm'
+                  : 'text-slate-500 hover:text-slate-900'
+              }`}
+            >
+              <LayoutDashboard className="w-3.5 h-3.5" />
+              Dashboard
+            </button>
+            <button
+              onClick={() => onNavigate('insights')}
+              className={`flex items-center gap-1.5 px-3 py-2 font-bold rounded-lg transition-all cursor-pointer ${
+                currentScreen === 'insights'
+                  ? 'bg-white text-slate-900 shadow-sm'
+                  : 'text-slate-500 hover:text-slate-900'
+              }`}
+            >
+              <BrainCircuit className="w-3.5 h-3.5" />
+              Coach Insights
+            </button>
           </nav>
         )}
-
         {/* Right Info: Beginner Toggle + Balance */}
         <div className="flex items-center gap-3">
           {/* Beginner Mode Toggle */}
@@ -132,13 +113,12 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
       </div>
 
-      {/* Mobile Tab Navigation */}
-      {userProfile && (
+      {userProfile && isJourneyDone && (
         <div className="md:hidden flex border-t border-slate-100 bg-white text-[10px] font-bold">
           <button
             onClick={() => onNavigate('explorer')}
             className={`flex-1 py-3 flex flex-col items-center gap-0.5 cursor-pointer ${
-              currentScreen === 'explorer' || currentScreen === 'understand' || currentScreen === 'simulator' || currentScreen === 'readiness'
+              currentScreen === 'explorer' || currentScreen === 'detail' || currentScreen === 'confirmation'
                 ? 'text-brand-indigo'
                 : 'text-slate-400'
             }`}
@@ -146,39 +126,24 @@ export const Navbar: React.FC<NavbarProps> = ({
             <Compass className="w-4 h-4" />
             Explore
           </button>
-          {!isJourneyDone && (
-            <button
-              onClick={() => onNavigate('walkthrough')}
-              className={`flex-1 py-3 flex flex-col items-center gap-0.5 cursor-pointer ${
-                currentScreen === 'walkthrough' ? 'text-brand-indigo' : 'text-slate-400'
-              }`}
-            >
-              <BookOpen className="w-4 h-4" />
-              Guide
-            </button>
-          )}
-          {isJourneyDone && (
-            <>
-              <button
-                onClick={() => onNavigate('dashboard')}
-                className={`flex-1 py-3 flex flex-col items-center gap-0.5 cursor-pointer ${
-                  currentScreen === 'dashboard' ? 'text-brand-indigo' : 'text-slate-400'
-                }`}
-              >
-                <LayoutDashboard className="w-4 h-4" />
-                Dashboard
-              </button>
-              <button
-                onClick={() => onNavigate('insights')}
-                className={`flex-1 py-3 flex flex-col items-center gap-0.5 cursor-pointer ${
-                  currentScreen === 'insights' ? 'text-brand-indigo' : 'text-slate-400'
-                }`}
-              >
-                <BrainCircuit className="w-4 h-4" />
-                Insights
-              </button>
-            </>
-          )}
+          <button
+            onClick={() => onNavigate('dashboard')}
+            className={`flex-1 py-3 flex flex-col items-center gap-0.5 cursor-pointer ${
+              currentScreen === 'dashboard' ? 'text-brand-indigo' : 'text-slate-400'
+            }`}
+          >
+            <LayoutDashboard className="w-4 h-4" />
+            Dashboard
+          </button>
+          <button
+            onClick={() => onNavigate('insights')}
+            className={`flex-1 py-3 flex flex-col items-center gap-0.5 cursor-pointer ${
+              currentScreen === 'insights' ? 'text-brand-indigo' : 'text-slate-400'
+            }`}
+          >
+            <BrainCircuit className="w-4 h-4" />
+            Insights
+          </button>
         </div>
       )}
     </header>

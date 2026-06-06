@@ -1,39 +1,34 @@
 export type RiskProfile = 'Conservative' | 'Moderate' | 'Aggressive';
 
-export type ExperienceChoice = 'I want to learn investing' | 'I want to start investing' | 'I know the basics';
+export type InvestmentGoal = 'Learn Investing' | 'Wealth Growth' | 'Long-Term Savings';
 
 export interface UserProfile {
-  experienceType: ExperienceChoice;
-  riskProfile: RiskProfile;
+  savingsAmount: number;
+  goal: InvestmentGoal;
+  simulationCompleted: boolean;
 }
 
-export type AssetType = 'Bonds' | 'Stocks' | 'Alternative' | 'Mixed';
-
-export interface Investment {
+export interface Stock {
   id: string;
   name: string;
+  price: number;
+  change: number; // Daily change %
   riskLevel: RiskProfile;
+  minInvestment: number;
   returnMin: number;
   returnMax: number;
   lossMin: number;
   lossMax: number;
+  holdingPeriod: string;
   description: string;
-  longDescription: string;
-  category: string;
-  assetType: AssetType;
-
-  // Educational Fields for V3 Detail Page
-  whatIsIt: string;
   whyInvest: string;
-  potentialBenefits: string;
-  potentialRisks: string;
-  expectedBehavior: string;
+  keyRisks: string;
 }
 
 export interface PortfolioItem {
   id: string;
-  investmentId: string;
-  investmentName: string;
+  stockId: string;
+  stockName: string;
   amountInvested: number;
   riskLevel: RiskProfile;
   purchaseDate: string;
