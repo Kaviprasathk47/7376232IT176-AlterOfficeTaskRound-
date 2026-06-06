@@ -7,12 +7,14 @@ interface InsightsProps {
   portfolio: PortfolioItem[];
   userRiskProfile: RiskProfile;
   beginnerMode: boolean;
+  onNavigateToExplore: () => void;
 }
 
 export const Insights: React.FC<InsightsProps> = ({
   portfolio,
   userRiskProfile,
   beginnerMode,
+  onNavigateToExplore,
 }) => {
   const totalInvested = portfolio.reduce((s, i) => s + i.amountInvested, 0);
 
@@ -191,6 +193,14 @@ export const Insights: React.FC<InsightsProps> = ({
           </div>
         </div>
       </div>
+
+      {/* Visual Priority: 3 Primary Action */}
+      <button
+        onClick={onNavigateToExplore}
+        className="w-full py-3.5 bg-brand-indigo hover:bg-brand-indigo-dark text-white text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 transition-all shadow-md shadow-brand-indigo/15 active:scale-[0.99] cursor-pointer"
+      >
+        Explore Categories to Rebalance
+      </button>
     </div>
   );
 };

@@ -14,6 +14,7 @@ interface DashboardProps {
 export const Dashboard: React.FC<DashboardProps> = ({
   portfolio,
   availableBalance,
+  beginnerMode,
   onSellHolding,
   onResetPortfolio,
   onNavigateToExplore,
@@ -165,6 +166,22 @@ export const Dashboard: React.FC<DashboardProps> = ({
           </div>
         </div>
       </div>
+
+      {/* Guidance Card (Beginner Mode ON) */}
+      {beginnerMode && portfolio.length === 0 && (
+        <div className="bg-brand-indigo/5 p-4 rounded-2xl border border-brand-indigo/15 text-center space-y-2 max-w-xl mx-auto animate-fade-in">
+          <p className="text-xs text-brand-indigo font-black">
+            💡 Coach Tip: Your portfolio is currently 100% Cash. Click "Allocate Practice Cash" above to select and allocate mock funds.
+          </p>
+        </div>
+      )}
+      {beginnerMode && portfolio.length > 0 && (
+        <div className="bg-brand-indigo/5 p-4 rounded-2xl border border-brand-indigo/15 text-center space-y-2 max-w-xl mx-auto animate-fade-in">
+          <p className="text-xs text-brand-indigo font-black">
+            💡 Coach Tip: To understand risk, click "Simulate Market Fluctuation" at the top of the dashboard. Watch how stocks fluctuate more than bonds.
+          </p>
+        </div>
+      )}
 
       {/* Simplified Single Chart (Visual History) */}
       {totalInvested > 0 && (

@@ -273,6 +273,7 @@ function App() {
             portfolio={portfolio}
             userRiskProfile={userProfile.riskProfile}
             beginnerMode={beginnerMode}
+            onNavigateToExplore={() => setCurrentScreen('explorer')}
           />
         )}
       </main>
