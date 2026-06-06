@@ -66,7 +66,7 @@ export const ReadinessCheck: React.FC<ReadinessCheckProps> = ({
           </div>
           <div className="flex justify-between items-center font-medium">
             <span className="text-slate-500">Allocation Amount:</span>
-            <span className="font-bold text-slate-850">${amount.toLocaleString()}</span>
+            <span className="font-bold text-slate-850">₹{amount.toLocaleString()}</span>
           </div>
 
           {/* Core Danger Detail */}
@@ -77,11 +77,11 @@ export const ReadinessCheck: React.FC<ReadinessCheckProps> = ({
             </div>
             <div className="flex justify-between items-end">
               <span className="text-xs text-brand-rose">Worst-Case Loss Amount:</span>
-              <span className="text-base font-black">-${worstLossAmount.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
+              <span className="text-base font-black">-₹{worstLossAmount.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
             </div>
-            <div className="flex justify-between items-center text-[10px] font-bold text-slate-600 border-t border-brand-rose/20 pt-1.5 mt-1">
+            <div className="flex justify-between items-center text-[10px] font-bold text-slate-605 border-t border-brand-rose/20 pt-1.5 mt-1">
               <span>Remaining balance if market crashes:</span>
-              <span>${remainingCash.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
+              <span>₹{remainingCash.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
             </div>
           </div>
         </div>

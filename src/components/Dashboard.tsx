@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import type { PortfolioItem, RiskProfile } from '../types';
 import { Explainable } from './Explainable';
-import { ArrowUpRight, ArrowDownRight, RefreshCw, Trash2, HelpCircle, BarChart3, LineChart } from 'lucide-react';
+import { ArrowUpRight, ArrowDownRight, RefreshCw, Trash2, HelpCircle, BarChart3, LineChart, Plus } from 'lucide-react';
 
 interface DashboardProps {
   portfolio: PortfolioItem[];
@@ -9,6 +9,7 @@ interface DashboardProps {
   beginnerMode: boolean;
   onSellHolding: (holdingId: string) => void;
   onResetPortfolio: () => void;
+  onNavigateToExplore: () => void;
 }
 
 export const Dashboard: React.FC<DashboardProps> = ({
@@ -17,10 +18,11 @@ export const Dashboard: React.FC<DashboardProps> = ({
   beginnerMode,
   onSellHolding,
   onResetPortfolio,
+  onNavigateToExplore,
 }) => {
   const [hoveredPoint, setHoveredPoint] = useState<number | null>(null);
 
-  // 1. Calculations for Portfolio Metrics
+  // 1. Portfolio Calculations
   const totalInvested = portfolio.reduce((sum, item) => sum + item.amountInvested, 0);
   
   const portfolioCurrentValue = portfolio.reduce((sum, item) => {
@@ -32,11 +34,11 @@ export const Dashboard: React.FC<DashboardProps> = ({
   const netGainLoss = portfolioCurrentValue - totalInvested;
   const gainLossPercentage = totalInvested > 0 ? (netGainLoss / totalInvested) * 100 : 0;
 
-  // 2. Risk Score calculation
+  // 2. Risk Score (Weighted average)
   const getNumericRisk = (risk: RiskProfile) => {
     if (risk === 'Conservative') return 20;
     if (risk === 'Moderate') return 55;
-    return 90; // Aggressive
+    return 90;
   };
 
   const weightedRiskScore = totalInvested > 0
@@ -51,7 +53,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
   };
 
   const getRiskLabelColor = (score: number) => {
-    if (score === 0) return 'text-slate-500';
+    if (score === 0) return 'text-slate-500 bg-slate-50 border-slate-100';
     if (score <= 35) return 'text-emerald-600 bg-emerald-50 border-emerald-100';
     if (score <= 65) return 'text-brand-amber-dark bg-brand-amber-light/10 border-brand-amber-light/30';
     return 'text-brand-rose bg-brand-rose/5 border-brand-rose/20';
@@ -93,7 +95,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
     ? `${historyPath} L ${getLineX(5)} ${lineChartHeight - lineChartPadding} L ${getLineX(0)} ${lineChartHeight - lineChartPadding} Z`
     : '';
 
-  // 4. Bar Chart Calculations (Asset Class Values compared side-by-side)
+  // 4. Bar Chart Calculations (Asset Class values side-by-side)
   const allocation = {
     Cash: availableBalance,
     Bonds: portfolio.filter(p => p.riskLevel === 'Conservative').reduce((s, i) => s + i.amountInvested * (1 + i.mockPerformance / 100), 0),
@@ -120,34 +122,46 @@ export const Dashboard: React.FC<DashboardProps> = ({
 
   return (
     <div className="max-w-6xl mx-auto py-6 px-4 animate-slide-up space-y-8">
-      {/* Dashboard Top Header Banner */}
+      {/* Top Value Banner */}
       <div className="flex flex-col sm:flex-row justify-between items-center gap-4 bg-slate-900 text-white rounded-3xl p-6 sm:p-8 shadow-md relative overflow-hidden">
         <div className="absolute right-0 top-0 w-80 h-80 bg-brand-indigo/15 rounded-full blur-3xl -z-0"></div>
-        
+
         <div className="space-y-1 text-center sm:text-left z-10">
           <span className="text-[10px] font-black tracking-widest text-slate-400 uppercase">
-            Practice Account Value
+            <Explainable
+              term="Portfolio"
+              tooltip="A portfolio is the total collection of all your financial investments and cash balances grouped together in one account."
+              beginnerMode={beginnerMode}
+              inlineExplanation="Your total investment basket value"
+            />
           </span>
           <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-white">
-            ${totalPortfolioValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            ₹{totalPortfolioValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </h1>
           <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 pt-1 text-xs">
-            <span className="text-slate-400">Total Profit / Loss:</span>
-            <span className={`font-bold flex items-center gap-0.5 ${netGainLoss >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
-              {netGainLoss >= 0 ? <ArrowUpRight className="w-3.5 h-3.5" /> : <ArrowDownRight className="w-3.5 h-3.5" />}
-              ${Math.abs(netGainLoss).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ({gainLossPercentage.toFixed(2)}%)
+            <span className="text-slate-400">Net Profit / Loss:</span>
+            <span className={`font-bold flex items-center gap-0.5 ${netGainLoss >= 0 ? 'text-emerald-400' : 'text-rose-450'}`}>
+              {netGainLoss >= 0 ? <ArrowUpRight className="w-3.5 h-3.5 animate-pulse" /> : <ArrowDownRight className="w-3.5 h-3.5" />}
+              ₹{Math.abs(netGainLoss).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ({gainLossPercentage.toFixed(2)}%)
             </span>
           </div>
         </div>
 
-        {/* Portfolio Control */}
+        {/* Portfolio Reset / Allocate */}
         <div className="z-10 flex gap-2">
           <button
+            onClick={onNavigateToExplore}
+            className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-brand-indigo hover:bg-brand-indigo-dark text-white text-xs font-bold transition-all shadow-md shadow-brand-indigo/15 cursor-pointer"
+          >
+            <Plus className="w-3.5 h-3.5" />
+            Allocate Practice Cash
+          </button>
+          <button
             onClick={onResetPortfolio}
-            className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl border border-slate-700 bg-slate-800 text-slate-200 text-xs font-semibold hover:bg-slate-750 hover:text-white transition-all cursor-pointer"
+            className="flex items-center gap-1.5 px-3 py-2.5 rounded-xl border border-slate-700 bg-slate-800 text-slate-200 text-xs font-semibold hover:bg-slate-750 hover:text-white transition-all cursor-pointer"
           >
             <RefreshCw className="w-3.5 h-3.5" />
-            Reset Practice Account
+            Reset
           </button>
         </div>
       </div>
@@ -165,11 +179,11 @@ export const Dashboard: React.FC<DashboardProps> = ({
             />
           </span>
           <span className="text-xl font-bold text-slate-850 block mt-1">
-            ${totalInvested.toLocaleString()}
+            ₹{totalInvested.toLocaleString()}
           </span>
         </div>
 
-        {/* Metric 2: Cash balance */}
+        {/* Metric 2: Cash Balance */}
         <div className="glass-panel p-5 border border-slate-100 glow-indigo">
           <span className="text-[10px] font-extrabold uppercase text-slate-400 tracking-wider mb-1 block">
             <Explainable
@@ -180,22 +194,22 @@ export const Dashboard: React.FC<DashboardProps> = ({
             />
           </span>
           <span className="text-xl font-bold text-slate-855 block mt-1">
-            ${availableBalance.toLocaleString()}
+            ₹{availableBalance.toLocaleString()}
           </span>
         </div>
 
-        {/* Metric 3: Profit / Loss */}
+        {/* Metric 3: Return Potential */}
         <div className="glass-panel p-5 border border-slate-100 glow-indigo">
           <span className="text-[10px] font-extrabold uppercase text-slate-400 tracking-wider mb-1 block">
             <Explainable
-              term="Profit / Loss"
-              tooltip="Profit/Loss shows the change in the value of your assets compared to what you invested. Red indicates a loss, green is profit."
+              term="Return Potential"
+              tooltip="Return Potential describes the estimated range of growth (profit) your investment might generate per year."
               beginnerMode={beginnerMode}
-              inlineExplanation="Performance returns of assets"
+              inlineExplanation="Estimated yearly returns"
             />
           </span>
           <span className={`text-xl font-extrabold block mt-1 ${netGainLoss >= 0 ? 'text-emerald-600' : 'text-brand-rose'}`}>
-            {netGainLoss >= 0 ? '+' : '-'}${Math.abs(netGainLoss).toLocaleString(undefined, { maximumFractionDigits: 0 })}
+            {netGainLoss >= 0 ? '+' : ''}₹{netGainLoss.toLocaleString(undefined, { maximumFractionDigits: 0 })}
           </span>
         </div>
 
@@ -204,10 +218,10 @@ export const Dashboard: React.FC<DashboardProps> = ({
           <div>
             <span className="text-[10px] font-extrabold uppercase text-slate-400 tracking-wider mb-1 block">
               <Explainable
-                term="Risk Score"
-                tooltip="Risk Score is a weighted average of your portfolio risk based on asset values. A higher score means higher volatility."
+                term="Risk Level"
+                tooltip="Risk describes how much an investment's value can rise or fall over time."
                 beginnerMode={beginnerMode}
-                inlineExplanation="Risk index from 0 (cash) to 100 (high risk)"
+                inlineExplanation="Weighted index of portfolio swings"
               />
             </span>
             <div className="flex items-baseline gap-2 mt-1">
@@ -237,7 +251,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
               <LineChart className="w-4 h-4 text-brand-indigo" />
               Portfolio Growth History
             </h3>
-            <p className="text-xs text-slate-500">6-Month historical performance of total portfolio value</p>
+            <p className="text-xs text-slate-550">Historical path tracking over the last 6 months</p>
           </div>
 
           <div className="relative w-full mt-4">
@@ -249,7 +263,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                   <g key={i} className="opacity-40">
                     <line x1={lineChartPadding} y1={y} x2={lineChartWidth - lineChartPadding} y2={y} stroke="#f1f5f9" strokeWidth="1.5" />
                     <text x={lineChartPadding - 8} y={y + 3} textAnchor="end" fontSize="9" fill="#94a3b8" fontWeight="bold">
-                      ${Math.round(val).toLocaleString()}
+                      ₹{Math.round(val).toLocaleString()}
                     </text>
                   </g>
                 );
@@ -261,7 +275,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                 </text>
               ))}
 
-              {totalInvested > 0 && <path d={areaPath} fill="url(#history-gradient-v2)" opacity="0.1" />}
+              {totalInvested > 0 && <path d={areaPath} fill="url(#history-gradient-v3)" opacity="0.1" />}
               <path d={historyPath} fill="none" stroke={netGainLoss >= 0 ? '#10b981' : '#f43f5e'} strokeWidth="2.5" strokeLinecap="round" />
 
               {historyData.map((d, i) => (
@@ -281,7 +295,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                     <g>
                       <rect x={getLineX(i) - 45} y={getLineY(d.value) - 32} width="90" height="20" rx="4" fill="#1e293b" />
                       <text x={getLineX(i)} y={getLineY(d.value) - 19} textAnchor="middle" fill="white" fontSize="9" fontWeight="bold">
-                        ${Math.round(d.value).toLocaleString()}
+                        ₹{Math.round(d.value).toLocaleString()}
                       </text>
                     </g>
                   )}
@@ -289,7 +303,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
               ))}
 
               <defs>
-                <linearGradient id="history-gradient-v2" x1="0" y1="0" x2="0" y2="1">
+                <linearGradient id="history-gradient-v3" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="0%" stopColor={netGainLoss >= 0 ? '#10b981' : '#f43f5e'} />
                   <stop offset="100%" stopColor={netGainLoss >= 0 ? '#10b981' : '#f43f5e'} stopOpacity="0" />
                 </linearGradient>
@@ -298,34 +312,32 @@ export const Dashboard: React.FC<DashboardProps> = ({
           </div>
         </div>
 
-        {/* Bar Chart comparing current values of allocations */}
+        {/* Bar Chart comparing values */}
         <div className="lg:col-span-5 glass-panel p-6 border border-slate-100 glow-indigo flex flex-col justify-between">
           <div>
             <h3 className="text-base font-bold text-slate-900 flex items-center gap-1.5">
               <BarChart3 className="w-4 h-4 text-brand-indigo" />
-              Asset Value Comparison
+              Category Value comparison
             </h3>
-            <p className="text-xs text-slate-500">Value of cash vs invested asset categories</p>
+            <p className="text-xs text-slate-550">Practice assets split by risk categories</p>
           </div>
 
           <div className="relative w-full mt-4 flex justify-center">
             <svg viewBox={`0 0 ${barChartWidth} ${barChartHeight}`} className="w-full h-auto overflow-visible">
-              {/* Grid Lines */}
               {[0, 0.5, 1].map((r, i) => {
                 const val = r * maxBarValue;
                 const chartAreaHeight = barChartHeight - barChartPadding * 2;
                 const y = barChartHeight - barChartPadding - r * chartAreaHeight;
                 return (
-                  <g key={i} className="opacity-40">
+                  <g key={i} className="opacity-45">
                     <line x1={barChartPadding} y1={y} x2={barChartWidth - barChartPadding} y2={y} stroke="#f1f5f9" strokeWidth="1.5" />
                     <text x={barChartPadding - 8} y={y + 3} textAnchor="end" fontSize="9" fill="#94a3b8" fontWeight="bold">
-                      ${Math.round(val).toLocaleString()}
+                      ₹{Math.round(val).toLocaleString()}
                     </text>
                   </g>
                 );
               })}
 
-              {/* Draw Bars */}
               {barData.map((d, i) => {
                 const chartAreaWidth = barChartWidth - barChartPadding * 2;
                 const colWidth = 35;
@@ -336,40 +348,13 @@ export const Dashboard: React.FC<DashboardProps> = ({
 
                 return (
                   <g key={i}>
-                    {/* The bar rect */}
-                    <rect
-                      x={x}
-                      y={y}
-                      width={colWidth}
-                      height={Math.max(barH, 3)} // Ensure visible line even if 0
-                      fill={d.color}
-                      rx="4"
-                      className="transition-all duration-500 hover:opacity-85"
-                    />
-
-                    {/* Bar Label underneath */}
-                    <text
-                      x={x + colWidth / 2}
-                      y={barChartHeight - barChartPadding + 15}
-                      textAnchor="middle"
-                      fontSize="9.5"
-                      fill="#94a3b8"
-                      fontWeight="bold"
-                    >
+                    <rect x={x} y={y} width={colWidth} height={Math.max(barH, 3)} fill={d.color} rx="4" />
+                    <text x={x + colWidth / 2} y={barChartHeight - barChartPadding + 15} textAnchor="middle" fontSize="9.5" fill="#94a3b8" fontWeight="bold">
                       {d.label}
                     </text>
-
-                    {/* Bar Value text above */}
                     {d.value > 0 && (
-                      <text
-                        x={x + colWidth / 2}
-                        y={y - 6}
-                        textAnchor="middle"
-                        fontSize="8.5"
-                        fill="#64748b"
-                        fontWeight="black"
-                      >
-                        ${Math.round(d.value).toLocaleString()}
+                      <text x={x + colWidth / 2} y={y - 6} textAnchor="middle" fontSize="8.5" fill="#64748b" fontWeight="black">
+                        ₹{Math.round(d.value).toLocaleString()}
                       </text>
                     )}
                   </g>
@@ -380,21 +365,21 @@ export const Dashboard: React.FC<DashboardProps> = ({
         </div>
       </div>
 
-      {/* Asset Positions Table */}
+      {/* active holdings */}
       <div className="glass-panel p-6 border border-slate-100 glow-indigo">
-        <h3 className="text-base font-bold text-slate-900 mb-4">Current Holdings</h3>
+        <h3 className="text-base font-bold text-slate-905 mb-4">Current Asset Allocations</h3>
 
         {portfolio.length === 0 ? (
           <div className="text-center py-8 text-slate-400 text-sm">
             <HelpCircle className="w-8 h-8 mx-auto mb-2 opacity-50" />
-            No virtual assets allocated yet. Navigate to the Explorer to practice investing.
+            No virtual assets allocated yet. Navigate to "Explore Categories" to allocate practice cash.
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="border-b border-slate-100 text-[10px] uppercase font-bold text-slate-400 tracking-wider">
-                  <th className="pb-3">Investment Name</th>
+                  <th className="pb-3">Investment Category</th>
                   <th className="pb-3 text-center">Risk Level</th>
                   <th className="pb-3 text-right">Invested Value</th>
                   <th className="pb-3 text-right">Current Value</th>
@@ -416,10 +401,10 @@ export const Dashboard: React.FC<DashboardProps> = ({
                         </span>
                       </td>
                       <td className="py-4 text-right font-medium text-slate-600">
-                        ${item.amountInvested.toLocaleString()}
+                        ₹{item.amountInvested.toLocaleString()}
                       </td>
                       <td className="py-4 text-right font-extrabold text-slate-905">
-                        ${currentItemValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                        ₹{currentItemValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                       </td>
                       <td className={`py-4 text-right font-black ${isPositive ? 'text-emerald-600' : 'text-brand-rose'}`}>
                         {isPositive ? '+' : ''}{item.mockPerformance.toFixed(2)}%
@@ -428,7 +413,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                         <button
                           onClick={() => onSellHolding(item.id)}
                           className="p-2 text-slate-400 hover:text-brand-rose rounded-lg hover:bg-slate-100 transition-colors cursor-pointer"
-                          title="Withdraw funds"
+                          title="Withdraw funds back into Cash balance"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>

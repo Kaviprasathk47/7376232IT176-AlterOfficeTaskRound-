@@ -1,172 +1,278 @@
 import React, { useState } from 'react';
-import { Compass, DollarSign, ShieldAlert, LineChart, LogOut, ArrowRight, ArrowLeft } from 'lucide-react';
+import { ArrowRight, ArrowLeft, TrendingUp, TrendingDown, Award, Compass } from 'lucide-react';
 
 interface WalkthroughProps {
   beginnerMode: boolean;
-  onClose: () => void;
+  onComplete: () => void;
 }
 
-export const Walkthrough: React.FC<WalkthroughProps> = ({ beginnerMode, onClose }) => {
-  const [activeStep, setActiveStep] = useState<number>(1);
+export const Walkthrough: React.FC<WalkthroughProps> = ({ beginnerMode, onComplete }) => {
+  const [journeyStep, setJourneyStep] = useState<number>(1);
 
-  const steps = [
-    {
-      number: 1,
-      title: 'Step 1: Choose Investment Category',
-      icon: <Compass className="w-8 h-8 text-brand-indigo" />,
-      explanation: 'Browse the available asset classes. Check the risk badges and study the possible loss metrics before selecting. Never pick an asset just because of high expected return.',
-      scenario: 'Example: You select the S&P 500 Index Fund to get moderate growth spread across 500 major US companies rather than picking a single stock.',
-      tip: 'Look for the risk badge: Conservative, Moderate, or Aggressive.',
-    },
-    {
-      number: 2,
-      title: 'Step 2: Set Amount & Run Simulator',
-      icon: <DollarSign className="w-8 h-8 text-emerald-500" />,
-      explanation: 'Enter the amount you wish to practice with. Adjust the budget slider to see positive growth scenarios (+25%), stable scenarios (+8%), and negative downturn scenarios (-30%) over a 5-year period.',
-      scenario: 'Example: Setting a $1,000 practice amount on a Technology Fund shows you could grow to $1,500, but in a crash, you could plunge to $600 (-$400 loss).',
-      tip: 'The worst-case scenario is highlighted in red. Focus on this risk first.',
-    },
-    {
-      number: 3,
-      title: 'Step 3: Readiness Check & Confirmation',
-      icon: <ShieldAlert className="w-8 h-8 text-brand-rose" />,
-      explanation: 'Pass the readiness gate by acknowledging the risks. Confirm that gains are not guaranteed, losses can and will happen during recessions, and that this uses mock money.',
-      scenario: 'Example: You check all 4 readiness boxes, acknowledging that you understand you could lose part of your $1,000 principal before the mock system locks your buy.',
-      tip: 'Only confirm when you feel comfortable with the potential loss value.',
-    },
-    {
-      number: 4,
-      title: 'Step 4: Track Performance on Dashboard',
-      icon: <LineChart className="w-8 h-8 text-brand-indigo" />,
-      explanation: 'Navigate to your dashboard to monitor total holdings. Review charts showing your asset allocation (donuts) and your historical growth paths (line charts). Check your average Portfolio Risk Score.',
-      scenario: 'Example: Your dashboard shows $1,000 invested. After a simulated market fluctuation, your value moves to $1,030 (+3% gain). Your portfolio risk score is 55/100.',
-      tip: 'A balanced portfolio should keep the risk score below 60/100.',
-    },
-    {
-      number: 5,
-      title: 'Step 5: Withdraw Funds or Let Compound',
-      icon: <LogOut className="w-8 h-8 text-brand-amber" />,
-      explanation: 'Realize your gains or accept losses by selling (withdrawing) mock assets. The funds are returned as cash back into your available balance, ready to practice with other categories.',
-      scenario: 'Example: You click the trash/sell button on your Tech holdings after a simulated gain, locking in a $50 gain. Your cash balance increases from $9,000 to $10,050.',
-      tip: 'Withdrawals simulate closing a trade to protect remaining capital or book gains.',
-    },
-  ];
-
-  const currentStepData = steps[activeStep - 1];
-
-  const handleNext = () => {
-    if (activeStep < 5) {
-      setActiveStep(prev => prev + 1);
-    } else {
-      onClose();
-    }
-  };
-
-  const handleBack = () => {
-    if (activeStep > 1) {
-      setActiveStep(prev => prev - 1);
-    }
+  const handleFinish = () => {
+    localStorage.setItem('investwise_journey_completed', 'true');
+    onComplete();
   };
 
   return (
-    <div className="max-w-3xl mx-auto py-6 px-4 animate-slide-up space-y-6">
-      {/* Header */}
-      <div className="text-center space-y-2 pb-4 border-b border-slate-100">
-        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-wider uppercase bg-brand-indigo/10 text-brand-indigo">
-          Interactive Walkthrough
+    <div className="max-w-xl mx-auto py-8 px-4 animate-slide-up">
+      {/* Visual Header */}
+      <div className="text-center space-y-2 mb-6">
+        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-brand-indigo/10 text-brand-indigo tracking-wider">
+          One-Time Guided Coach Journey
         </span>
-        <h1 className="text-3xl font-black text-slate-900 tracking-tight">
-          How Investment Simulation Works
-        </h1>
-        <p className="text-slate-500 text-xs max-w-md mx-auto">
-          Follow the 5-step lifecycle of capital allocation to understand the rules before playing with virtual cash.
+        <h1 className="text-2xl font-black text-slate-900 tracking-tight">Your First Investment Journey</h1>
+        <p className="text-slate-500 text-xs max-w-sm mx-auto">
+          Experience the complete lifecycle of an asset in 5 steps to understand returns and volatility.
         </p>
       </div>
 
-      {/* Steper indicator dots */}
-      <div className="flex justify-between items-center max-w-md mx-auto">
-        {steps.map((s) => (
-          <button
-            key={s.number}
-            onClick={() => setActiveStep(s.number)}
-            className={`w-8 h-8 rounded-full border flex items-center justify-center text-xs font-bold transition-all cursor-pointer ${
-              activeStep === s.number
-                ? 'bg-brand-indigo border-brand-indigo text-white shadow-sm scale-110'
-                : activeStep > s.number
-                ? 'bg-brand-indigo/10 border-brand-indigo/20 text-brand-indigo'
-                : 'bg-white border-slate-200 text-slate-400 hover:border-slate-300'
-            }`}
-          >
-            {s.number}
-          </button>
-        ))}
-      </div>
-
-      {/* Step Card Visual */}
-      <div className="glass-panel p-6 sm:p-8 border border-slate-100 glow-indigo flex flex-col items-center text-center space-y-5 animate-fade-in relative min-h-[300px] justify-between">
+      {/* Visual Stepper Card Panel */}
+      <div className="glass-panel p-6 sm:p-8 border border-slate-100 glow-indigo flex flex-col justify-between min-h-[350px]">
         
-        {/* Step Icon */}
-        <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100">
-          {currentStepData.icon}
-        </div>
-
-        {/* Step Text */}
-        <div className="space-y-2.5 max-w-lg">
-          <h2 className="text-lg sm:text-xl font-black text-slate-900">{currentStepData.title}</h2>
-          <p className="text-xs sm:text-sm text-slate-650 leading-relaxed font-normal">
-            {currentStepData.explanation}
-          </p>
-          
-          {/* Example scenario panel */}
-          <div className="p-3 bg-slate-50 border border-slate-150 rounded-xl text-left text-xs text-slate-600 font-semibold space-y-1">
-            <span className="text-[9px] uppercase font-bold text-slate-400 block tracking-wider">Example Scenario:</span>
-            <p className="font-medium">{currentStepData.scenario}</p>
-          </div>
-
-          {/* Beginner Mode Toggle inline helper */}
-          {beginnerMode && (
-            <div className="p-2.5 bg-brand-indigo/5 border border-brand-indigo/15 text-brand-indigo rounded-xl text-left text-[11px] leading-relaxed animate-fade-in">
-              💡 <strong>Pro Coach Tip:</strong> {currentStepData.tip}
+        {/* Step 1: Choose category */}
+        {journeyStep === 1 && (
+          <div className="space-y-4 animate-fade-in">
+            <div className="flex items-center gap-3">
+              <div className="p-3 bg-brand-indigo/10 rounded-xl text-brand-indigo">
+                <Compass className="w-6 h-6" />
+              </div>
+              <div>
+                <span className="text-[10px] font-extrabold text-slate-400 uppercase">Step 1 of 5</span>
+                <h3 className="font-extrabold text-slate-900 text-sm">Choose Your Investment Category</h3>
+              </div>
             </div>
-          )}
-        </div>
 
-        {/* Controls inside card */}
-        <div className="flex justify-between items-center w-full pt-4 border-t border-slate-100">
-          <button
-            onClick={handleBack}
-            disabled={activeStep === 1}
-            className={`flex items-center gap-1 text-xs font-semibold px-4 py-2 rounded-xl transition-all ${
-              activeStep === 1
-                ? 'text-slate-300 cursor-not-allowed'
-                : 'text-slate-505 hover:text-slate-900 cursor-pointer'
-            }`}
-          >
-            <ArrowLeft className="w-3.5 h-3.5" />
-            Previous
-          </button>
+            <p className="text-xs sm:text-sm text-slate-605 leading-relaxed font-normal">
+              Before investing, you must select an asset category. Let\'s pick a moderate S&P 500 Index Fund, which bundles the top 500 US companies.
+            </p>
 
-          <span className="text-[10px] text-slate-405 font-bold uppercase">
-            Step {activeStep} of 5
-          </span>
+            {/* Target Selectable Card */}
+            <div className="p-4 rounded-2xl border-2 border-brand-indigo bg-brand-indigo/5 cursor-pointer">
+              <div className="flex justify-between items-center">
+                <span className="text-xs font-black text-slate-900">S&P 500 Index Fund</span>
+                <span className="px-2 py-0.5 rounded-md text-[9px] font-bold border border-brand-amber text-brand-amber-dark bg-brand-amber-light/10">Moderate</span>
+              </div>
+              <span className="block text-[11px] text-slate-500 mt-1">Invests in the 500 largest US companies.</span>
+            </div>
 
-          <button
-            onClick={handleNext}
-            className="flex items-center gap-1 text-xs font-bold px-4 py-2 bg-brand-indigo hover:bg-brand-indigo-dark text-white rounded-xl cursor-pointer transition-all active:scale-95"
-          >
-            {activeStep === 5 ? 'Finish Walkthrough' : 'Next Step'}
-            <ArrowRight className="w-3.5 h-3.5" />
-          </button>
-        </div>
-      </div>
+            {beginnerMode && (
+              <p className="text-[10px] text-brand-indigo font-medium bg-brand-indigo/5 p-2.5 rounded-xl border border-brand-indigo/10 leading-normal italic">
+                💡 <strong>Coach Tip:</strong> Index funds are diversified, meaning one single company failing will not wipe out your savings.
+              </p>
+            )}
 
-      <div className="text-center">
-        <button
-          onClick={onClose}
-          className="text-xs font-bold text-slate-400 hover:text-brand-indigo underline transition-colors cursor-pointer"
-        >
-          Skip / Exit Walkthrough
-        </button>
+            <div className="pt-4 border-t border-slate-100 flex justify-end">
+              <button
+                onClick={() => setJourneyStep(2)}
+                className="py-2.5 px-5 bg-brand-indigo hover:bg-brand-indigo-dark text-white text-xs font-bold rounded-xl flex items-center gap-1.5 transition-all active:scale-[0.98]"
+              >
+                Choose S&P 500 Fund
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Step 2: Invest Mock ₹1000 */}
+        {journeyStep === 2 && (
+          <div className="space-y-4 animate-fade-in">
+            <div className="flex items-center gap-3">
+              <div className="p-3 bg-emerald-100 text-emerald-600 rounded-xl">
+                <Compass className="w-6 h-6" />
+              </div>
+              <div>
+                <span className="text-[10px] font-extrabold text-slate-400 uppercase">Step 2 of 5</span>
+                <h3 className="font-extrabold text-slate-900 text-sm">Invest Practice Capital</h3>
+              </div>
+            </div>
+
+            <p className="text-xs sm:text-sm text-slate-605 leading-relaxed font-normal">
+              You decide how much cash to allocate. Let\'s practice by allocating a mock ₹1,000 into the S&P 500 Index Fund.
+            </p>
+
+            <div className="p-4 rounded-xl bg-slate-50 border border-slate-150 flex justify-between items-center text-xs">
+              <span className="text-slate-500 font-semibold">Allocation Amount:</span>
+              <span className="font-extrabold text-slate-900">₹1,000</span>
+            </div>
+
+            {beginnerMode && (
+              <p className="text-[10px] text-slate-500 italic">
+                ℹ️ Placing ₹1,000 here means ₹1,000 is moved from Cash into the Index Fund.
+              </p>
+            )}
+
+            <div className="pt-4 border-t border-slate-100 flex justify-between items-center">
+              <button
+                onClick={() => setJourneyStep(1)}
+                className="text-xs font-bold text-slate-400 hover:text-slate-950 flex items-center gap-1"
+              >
+                <ArrowLeft className="w-3.5 h-3.5" /> Back
+              </button>
+              <button
+                onClick={() => setJourneyStep(3)}
+                className="py-2.5 px-5 bg-brand-indigo hover:bg-brand-indigo-dark text-white text-xs font-bold rounded-xl flex items-center gap-1.5 transition-all active:scale-[0.98]"
+              >
+                Confirm ₹1,000 Investment
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Step 3: Market goes UP */}
+        {journeyStep === 3 && (
+          <div className="space-y-4 animate-fade-in">
+            <div className="flex items-center gap-3">
+              <div className="p-3 bg-emerald-100 text-emerald-600 rounded-xl animate-bounce">
+                <TrendingUp className="w-6 h-6 animate-pulse" />
+              </div>
+              <div>
+                <span className="text-[10px] font-extrabold text-slate-400 uppercase">Step 3 of 5</span>
+                <h3 className="font-extrabold text-slate-900 text-sm">Market Booms (Upward Cycle)</h3>
+              </div>
+            </div>
+
+            <p className="text-xs sm:text-sm text-slate-605 leading-relaxed font-normal">
+              Good news! The general economy expands, corporate earnings increase, and index stock values climb.
+            </p>
+
+            {/* Performance metric */}
+            <div className="p-4 rounded-2xl border border-emerald-200 bg-emerald-50/50 flex justify-between items-center">
+              <div>
+                <span className="text-[9px] uppercase font-bold text-slate-400 block tracking-wider">Portfolio Value</span>
+                <span className="text-2xl font-black text-emerald-600">₹1,150</span>
+              </div>
+              <div className="text-right">
+                <span className="text-[9px] uppercase font-bold text-slate-400 block tracking-wider">Simulated Return</span>
+                <span className="text-sm font-bold text-emerald-650">+₹150 (+15%)</span>
+              </div>
+            </div>
+
+            {beginnerMode && (
+              <p className="text-[10px] text-emerald-800 bg-emerald-50 border border-emerald-100 p-2.5 rounded-xl leading-normal italic">
+                📈 <strong>Gain Achieved:</strong> Your ₹1,000 investment has generated a simulated profit of ₹150.
+              </p>
+            )}
+
+            <div className="pt-4 border-t border-slate-100 flex justify-between items-center">
+              <button
+                onClick={() => setJourneyStep(2)}
+                className="text-xs font-bold text-slate-400 hover:text-slate-950 flex items-center gap-1"
+              >
+                <ArrowLeft className="w-3.5 h-3.5" /> Back
+              </button>
+              <button
+                onClick={() => setJourneyStep(4)}
+                className="py-2.5 px-5 bg-brand-indigo hover:bg-brand-indigo-dark text-white text-xs font-bold rounded-xl flex items-center gap-1.5 transition-all active:scale-[0.98]"
+              >
+                Next (Market Changes)
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Step 4: Market goes DOWN */}
+        {journeyStep === 4 && (
+          <div className="space-y-4 animate-fade-in">
+            <div className="flex items-center gap-3">
+              <div className="p-3 bg-brand-rose/10 text-brand-rose rounded-xl">
+                <TrendingDown className="w-6 h-6 animate-pulse" />
+              </div>
+              <div>
+                <span className="text-[10px] font-extrabold text-slate-400 uppercase">Step 4 of 5</span>
+                <h3 className="font-extrabold text-slate-900 text-sm">Recession Hits (Downward Cycle)</h3>
+              </div>
+            </div>
+
+            <p className="text-xs sm:text-sm text-slate-605 leading-relaxed font-normal">
+              Market cycles change. High interest rates or general recessions hit corporate sales, and stock prices plunge.
+            </p>
+
+            {/* Downward metric (Visual Heavy Red) */}
+            <div className="p-4 rounded-2xl border-2 border-brand-rose bg-brand-rose/10 flex justify-between items-center glow-rose text-brand-rose">
+              <div>
+                <span className="text-[9px] uppercase font-extrabold block tracking-wider">Portfolio Value</span>
+                <span className="text-2xl font-black text-brand-rose-dark">₹850</span>
+              </div>
+              <div className="text-right">
+                <span className="text-[9px] uppercase font-bold block tracking-wider">Simulated Return</span>
+                <span className="text-sm font-bold text-brand-rose-dark">-₹150 (-15%)</span>
+              </div>
+            </div>
+
+            {beginnerMode && (
+              <p className="text-[10px] text-brand-rose bg-brand-rose/5 border border-brand-rose/15 p-2.5 rounded-xl leading-normal italic">
+                ⚠️ <strong>Downside Realized:</strong> Volatility means your principal value can drop. Your ₹1,000 is now valued at only ₹850.
+              </p>
+            )}
+
+            <div className="pt-4 border-t border-slate-100 flex justify-between items-center">
+              <button
+                onClick={() => setJourneyStep(3)}
+                className="text-xs font-bold text-slate-400 hover:text-slate-950 flex items-center gap-1"
+              >
+                <ArrowLeft className="w-3.5 h-3.5" /> Back
+              </button>
+              <button
+                onClick={() => setJourneyStep(5)}
+                className="py-2.5 px-5 bg-brand-rose hover:bg-brand-rose-dark text-white text-xs font-bold rounded-xl flex items-center gap-1.5 transition-all active:scale-[0.98]"
+              >
+                View Final Lesson
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Step 5: Summary Lessons */}
+        {journeyStep === 5 && (
+          <div className="space-y-4 animate-fade-in">
+            <div className="flex items-center gap-3">
+              <div className="p-3 bg-brand-indigo/10 rounded-xl text-brand-indigo">
+                <Award className="w-6 h-6 animate-spin" style={{ animationDuration: '4s' }} />
+              </div>
+              <div>
+                <span className="text-[10px] font-extrabold text-slate-400 uppercase">Step 5 of 5</span>
+                <h3 className="font-extrabold text-slate-900 text-sm">Visual Journey Summary</h3>
+              </div>
+            </div>
+
+            <p className="text-xs sm:text-sm text-slate-605 leading-relaxed font-normal">
+              You have experienced both profit (Market Goes Up) and loss (Market Goes Down) mock scenarios.
+            </p>
+
+            <div className="p-4 rounded-2xl border border-slate-150 bg-slate-50 text-center space-y-1.5">
+              <span className="text-[10px] uppercase font-bold text-slate-405 block tracking-wider">Final Coaching Lesson</span>
+              <p className="text-sm font-extrabold text-slate-800 leading-snug">
+                Investments can increase or decrease in value. Risk and returns are always connected.
+              </p>
+            </div>
+
+            {beginnerMode && (
+              <p className="text-[10px] text-brand-indigo leading-relaxed text-center">
+                Now that you completed this guided cycle, your practice dashboard will unlock. Build your custom diversified portfolio risk-free.
+              </p>
+            )}
+
+            <div className="pt-4 border-t border-slate-100 flex justify-between items-center">
+              <button
+                onClick={() => setJourneyStep(4)}
+                className="text-xs font-bold text-slate-400 hover:text-slate-950 flex items-center gap-1"
+              >
+                <ArrowLeft className="w-3.5 h-3.5" /> Back
+              </button>
+              <button
+                onClick={handleFinish}
+                className="py-2.5 px-6 bg-brand-indigo hover:bg-brand-indigo-dark text-white text-xs font-bold rounded-xl flex items-center gap-1.5 transition-all active:scale-[0.98] shadow-md shadow-brand-indigo/15"
+              >
+                Finish Journey & Open Dashboard
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

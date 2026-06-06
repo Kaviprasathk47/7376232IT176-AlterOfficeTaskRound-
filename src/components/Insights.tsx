@@ -68,6 +68,7 @@ export const Insights: React.FC<InsightsProps> = ({
       color: 'bg-brand-rose/5 border-brand-rose/20 text-brand-rose-dark border-2 border-dashed',
       icon: <AlertTriangle className="w-5 h-5 text-brand-rose shrink-0 animate-bounce" />,
       learnText: `Your onboarding goal and background calculations selected a "${userRiskProfile}" profile, but your allocations hold volatile assets. While they can grow fast, they also expose you to deeper drawdowns than you planned for. Consider rebalancing some of your capital into safer cash or bond positions to match your comfort level.`,
+      drawerTerm: 'Risk Level',
     });
   }
 
@@ -81,6 +82,7 @@ export const Insights: React.FC<InsightsProps> = ({
       color: 'bg-brand-rose/5 border-brand-rose/20 text-brand-rose-dark',
       icon: <AlertTriangle className="w-5 h-5 text-brand-rose shrink-0" />,
       learnText: 'Concentration risk occurs when you put too much of your money into a single asset or sector. If that sector suffers a downturn (for example, technology stocks collapsing due to new regulation), your entire portfolio takes a massive hit. Spreading allocations across index funds and bonds cushions this drop.',
+      drawerTerm: 'Diversification',
     });
   }
 
@@ -94,6 +96,7 @@ export const Insights: React.FC<InsightsProps> = ({
       color: 'bg-brand-rose/5 border-brand-rose/20 text-brand-rose-dark',
       icon: <AlertTriangle className="w-5 h-5 text-brand-rose shrink-0" />,
       learnText: 'A high portfolio risk score indicates that you hold mostly highly volatile growth stocks or tech sectors. While this opens up massive return potentials in booming economies, it exposes you to rapid drops of up to 60% of your principal during crashes. Balancing with bonds stabilizes your balance sheet.',
+      drawerTerm: 'Volatility',
     });
   }
 
@@ -107,6 +110,7 @@ export const Insights: React.FC<InsightsProps> = ({
       color: 'bg-brand-amber-light/10 border-brand-amber-light/35 text-brand-amber-dark',
       icon: <AlertCircle className="w-5 h-5 text-brand-amber-dark shrink-0" />,
       learnText: 'Low-risk assets like government bonds provide capital protection. They pay reliable interest and do not crash with the stock market. Holding a defensive portion (e.g. 20-30%) acting as insurance makes your overall portfolio healthy and prevents panic-selling during stock downturns.',
+      drawerTerm: 'Bonds',
     });
   }
 
@@ -120,6 +124,7 @@ export const Insights: React.FC<InsightsProps> = ({
       color: 'bg-emerald-50 border-emerald-100 text-emerald-800',
       icon: <Lightbulb className="w-5 h-5 text-emerald-600 shrink-0" />,
       learnText: 'Diversification means not placing all your eggs in one basket. Spreading money across government debt, market indexes, and tech companies guarantees that a failure in one company (e.g., bankruptcy) will not wipe out your total wealth.',
+      drawerTerm: 'Diversification',
     });
   }
 
@@ -133,6 +138,7 @@ export const Insights: React.FC<InsightsProps> = ({
       color: 'bg-emerald-50 border-emerald-100 text-emerald-800',
       icon: <Lightbulb className="w-5 h-5 text-emerald-600 shrink-0" />,
       learnText: 'Your risk score is balanced. You hold a solid ratio of defensive cash/bonds alongside growth stocks, shielding your savings from extreme crashes while allowing steady compound growth over long cycles.',
+      drawerTerm: 'Portfolio',
     });
   }
 
@@ -178,13 +184,21 @@ export const Insights: React.FC<InsightsProps> = ({
                     </div>
                   </div>
 
-                  {/* V2 Learn More Toggle Button */}
-                  <div className="border-t border-slate-200/30 pt-3 mt-1.5 flex justify-end">
+                  {/* V3 Learn More & Explainable Drawer Trigger */}
+                  <div className="border-t border-slate-200/30 pt-3 mt-1.5 flex flex-wrap items-center justify-between gap-2 text-xs">
+                    <div className="flex items-center gap-1 font-bold">
+                      <span className="text-[10px] text-slate-400 font-extrabold uppercase">Key Concept:</span>
+                      <Explainable
+                        term={alert.drawerTerm}
+                        beginnerMode={beginnerMode}
+                        highlight={true}
+                      />
+                    </div>
                     <button
                       onClick={() => toggleExpand(alert.id)}
-                      className="inline-flex items-center gap-1 text-xs font-bold hover:underline cursor-pointer focus:outline-none"
+                      className="inline-flex items-center gap-1 font-bold hover:underline cursor-pointer focus:outline-none"
                     >
-                      <span>Learn More ⓘ</span>
+                      <span>Coach Tip</span>
                       {isExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
                     </button>
                   </div>

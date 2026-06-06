@@ -1,9 +1,10 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { X, HelpCircle } from 'lucide-react';
+import React, { useState } from 'react';
+import { termDefinitions } from '../data/drawers';
+import { X, HelpCircle, AlertCircle } from 'lucide-react';
 
 interface ExplainableProps {
-  term: string | React.ReactNode;
-  tooltip: string;
+  term: string;
+  tooltip?: string;
   beginnerMode: boolean;
   inlineExplanation?: string;
   highlight?: boolean;
@@ -16,39 +17,18 @@ export const Explainable: React.FC<ExplainableProps> = ({
   inlineExplanation,
   highlight = false,
 }) => {
-  const [showTooltip, setShowTooltip] = useState(false);
-  const [showModal, setShowModal] = useState(false);
-  const triggerRef = useRef<HTMLButtonElement>(null);
+  const [showDrawer, setShowDrawer] = useState(false);
 
-  // Check if device supports hover (desktop vs mobile)
-  const [isMobile, setIsMobile] = useState(false);
+  // Fetch from drawers data or fallback
+  const definitionData = termDefinitions[term] || {
+    title: `What is ${term}?`,
+    definition: tooltip || 'Explanation not found.',
+    example: '',
+  };
 
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.matchMedia('(max-width: 768px)').matches || 'ontouchstart' in window);
-    };
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
-
-  const handleInteraction = (e: React.MouseEvent) => {
+  const handleOpen = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (isMobile) {
-      setShowModal(true);
-    }
-  };
-
-  const handleMouseEnter = () => {
-    if (!isMobile) {
-      setShowTooltip(true);
-    }
-  };
-
-  const handleMouseLeave = () => {
-    if (!isMobile) {
-      setShowTooltip(false);
-    }
+    setShowDrawer(true);
   };
 
   return (
@@ -56,13 +36,12 @@ export const Explainable: React.FC<ExplainableProps> = ({
       <span className="inline-flex flex-col">
         <span className="inline-flex items-center gap-1 flex-wrap">
           <button
-            ref={triggerRef}
             type="button"
-            onClick={handleInteraction}
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
+            onClick={handleOpen}
             className={`inline-flex items-center gap-0.5 text-left font-bold transition-all focus:outline-none rounded hover:text-brand-indigo cursor-pointer ${
-              highlight ? 'text-brand-indigo underline decoration-dashed underline-offset-2 decoration-brand-indigo/60' : 'text-slate-900'
+              highlight
+                ? 'text-brand-indigo underline decoration-dashed underline-offset-2 decoration-brand-indigo/60'
+                : 'text-slate-905'
             }`}
           >
             <span>{term}</span>
@@ -70,62 +49,104 @@ export const Explainable: React.FC<ExplainableProps> = ({
               ⓘ
             </span>
           </button>
-
-          {/* Desktop Hover Tooltip Bubble */}
-          {!isMobile && showTooltip && (
-            <span className="absolute z-50 w-64 p-3 text-xs leading-relaxed text-white bg-slate-900 rounded-xl shadow-lg border border-slate-800 -translate-y-full -translate-x-1/4 -mt-2 animate-fade-in block font-normal">
-              <span className="font-bold text-brand-indigo-light block mb-0.5">
-                {typeof term === 'string' ? term : 'Explanation'}
-              </span>
-              {tooltip}
-              {/* Tooltip triangle */}
-              <span className="absolute bottom-0 left-1/4 -mb-1 w-2.5 h-2.5 bg-slate-900 border-r border-b border-slate-800 rotate-45 transform translate-x-1/2"></span>
-            </span>
-          )}
         </span>
 
-        {/* Beginner Mode: Auto Inline Helper */}
-        {beginnerMode && (inlineExplanation || tooltip) && (
-          <span className="text-[10px] text-brand-indigo font-medium italic block mt-0.5 leading-tight opacity-90 animate-fade-in">
-            ({inlineExplanation || tooltip})
+        {/* Beginner Mode inline support */}
+        {beginnerMode && (inlineExplanation || definitionData.definition) && (
+          <span className="text-[10px] text-brand-indigo font-medium italic block mt-0.5 leading-tight opacity-90">
+            ({inlineExplanation || (definitionData.definition.substring(0, 50) + '...')})
           </span>
         )}
       </span>
 
-      {/* Mobile Tap Explanation Modal */}
-      {isMobile && showModal && (
-        <div 
-          className="fixed inset-0 z-50 flex items-end justify-center bg-slate-950/40 backdrop-blur-xs p-4 animate-fade-in"
-          onClick={() => setShowModal(false)}
+      {/* Slide-out Side Drawer Overlay */}
+      {showDrawer && (
+        <div
+          className="fixed inset-0 z-50 flex justify-end bg-slate-950/40 backdrop-blur-xs animate-fade-in"
+          onClick={() => setShowDrawer(false)}
         >
-          <div 
-            className="w-full max-w-sm bg-white rounded-2xl p-6 shadow-xl border border-slate-100 flex flex-col space-y-4 animate-slide-up"
+          {/* Side Drawer Panel */}
+          <div
+            className="w-full max-w-sm sm:max-w-md bg-white h-full shadow-2xl p-6 sm:p-8 flex flex-col justify-between overflow-y-auto animate-slide-up sm:animate-none border-l border-slate-100"
             onClick={(e) => e.stopPropagation()}
+            style={{
+              animation: 'slideInRight 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+            }}
           >
-            <div className="flex justify-between items-center pb-2 border-b border-slate-100">
-              <span className="font-extrabold text-slate-900 flex items-center gap-1.5">
-                <HelpCircle className="w-4 h-4 text-brand-indigo" />
-                {typeof term === 'string' ? term : 'Term Explanation'}
-              </span>
-              <button 
-                onClick={() => setShowModal(false)}
-                className="p-1.5 text-slate-400 hover:text-slate-950 rounded-lg hover:bg-slate-100 transition-colors"
-              >
-                <X className="w-4 h-4" />
-              </button>
+            <div className="space-y-6">
+              {/* Drawer Header */}
+              <div className="flex justify-between items-center pb-4 border-b border-slate-100">
+                <span className="font-black text-lg text-slate-900 flex items-center gap-2 tracking-tight">
+                  <HelpCircle className="w-5 h-5 text-brand-indigo" />
+                  {definitionData.title}
+                </span>
+                <button
+                  onClick={() => setShowDrawer(false)}
+                  className="p-1.5 text-slate-400 hover:text-slate-900 rounded-lg hover:bg-slate-100 transition-all cursor-pointer"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* Definition */}
+              <p className="text-slate-655 text-sm leading-relaxed font-normal">
+                {definitionData.definition}
+              </p>
+
+              {/* Risk specifications if present */}
+              {(definitionData.lowRiskText || definitionData.highRiskText) && (
+                <div className="space-y-3 pt-2">
+                  <h4 className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
+                    Risk Breakdown
+                  </h4>
+                  {definitionData.lowRiskText && (
+                    <div className="p-3 bg-emerald-50/50 border border-emerald-100 rounded-xl text-xs text-emerald-800 leading-normal flex gap-2">
+                      <span className="font-bold">•</span>
+                      <span>{definitionData.lowRiskText}</span>
+                    </div>
+                  )}
+                  {definitionData.highRiskText && (
+                    <div className="p-3 bg-brand-rose/5 border border-brand-rose/15 rounded-xl text-xs text-brand-rose-dark leading-normal flex gap-2">
+                      <AlertCircle className="w-4 h-4 text-brand-rose shrink-0 mt-0.5" />
+                      <span>{definitionData.highRiskText}</span>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Real World Example */}
+              {definitionData.example && (
+                <div className="p-4 bg-slate-50 border border-slate-150 rounded-xl space-y-1.5 text-xs text-slate-650 leading-relaxed font-normal">
+                  <span className="text-[9px] uppercase font-bold text-slate-400 block tracking-wider">
+                    Real-World Example:
+                  </span>
+                  <p className="font-medium">{definitionData.example}</p>
+                </div>
+              )}
             </div>
-            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
-              {tooltip}
-            </p>
+
+            {/* Bottom Actions */}
             <button
-              onClick={() => setShowModal(false)}
-              className="w-full py-2.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-xl"
+              onClick={() => setShowDrawer(false)}
+              className="w-full mt-8 py-3 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-xl transition-colors cursor-pointer"
             >
-              Got it
+              Got it, close explanation
             </button>
           </div>
         </div>
       )}
+
+      {/* Slide in from right CSS animation */}
+      <style>{`
+        @keyframes slideInRight {
+          from {
+            transform: translateX(100%);
+          }
+          to {
+            transform: translateX(0);
+          }
+        }
+      `}</style>
     </>
   );
 };

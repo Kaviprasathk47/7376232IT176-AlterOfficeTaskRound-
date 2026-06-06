@@ -19,6 +19,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   onToggleBeginnerMode,
   onNavigate,
 }) => {
+  const isJourneyDone = localStorage.getItem('investwise_journey_completed') === 'true';
   return (
     <header className="sticky top-0 z-50 w-full border-b border-slate-100 bg-white/80 backdrop-blur-md">
       <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between gap-4">
@@ -49,39 +50,45 @@ export const Navbar: React.FC<NavbarProps> = ({
               <Compass className="w-3.5 h-3.5" />
               Explore
             </button>
-            <button
-              onClick={() => onNavigate('walkthrough')}
-              className={`flex items-center gap-1.5 px-3 py-2 font-bold rounded-lg transition-all cursor-pointer ${
-                currentScreen === 'walkthrough'
-                  ? 'bg-white text-slate-900 shadow-sm'
-                  : 'text-slate-500 hover:text-slate-900'
-              }`}
-            >
-              <BookOpen className="w-3.5 h-3.5" />
-              Journey Guide
-            </button>
-            <button
-              onClick={() => onNavigate('dashboard')}
-              className={`flex items-center gap-1.5 px-3 py-2 font-bold rounded-lg transition-all cursor-pointer ${
-                currentScreen === 'dashboard'
-                  ? 'bg-white text-slate-900 shadow-sm'
-                  : 'text-slate-500 hover:text-slate-900'
-              }`}
-            >
-              <LayoutDashboard className="w-3.5 h-3.5" />
-              Dashboard
-            </button>
-            <button
-              onClick={() => onNavigate('insights')}
-              className={`flex items-center gap-1.5 px-3 py-2 font-bold rounded-lg transition-all cursor-pointer ${
-                currentScreen === 'insights'
-                  ? 'bg-white text-slate-900 shadow-sm'
-                  : 'text-slate-500 hover:text-slate-900'
-              }`}
-            >
-              <BrainCircuit className="w-3.5 h-3.5" />
-              Coach Insights
-            </button>
+            {!isJourneyDone && (
+              <button
+                onClick={() => onNavigate('walkthrough')}
+                className={`flex items-center gap-1.5 px-3 py-2 font-bold rounded-lg transition-all cursor-pointer ${
+                  currentScreen === 'walkthrough'
+                    ? 'bg-white text-slate-900 shadow-sm'
+                    : 'text-slate-500 hover:text-slate-900'
+                }`}
+              >
+                <BookOpen className="w-3.5 h-3.5" />
+                Journey Guide
+              </button>
+            )}
+            {isJourneyDone && (
+              <>
+                <button
+                  onClick={() => onNavigate('dashboard')}
+                  className={`flex items-center gap-1.5 px-3 py-2 font-bold rounded-lg transition-all cursor-pointer ${
+                    currentScreen === 'dashboard'
+                      ? 'bg-white text-slate-900 shadow-sm'
+                      : 'text-slate-500 hover:text-slate-900'
+                  }`}
+                >
+                  <LayoutDashboard className="w-3.5 h-3.5" />
+                  Dashboard
+                </button>
+                <button
+                  onClick={() => onNavigate('insights')}
+                  className={`flex items-center gap-1.5 px-3 py-2 font-bold rounded-lg transition-all cursor-pointer ${
+                    currentScreen === 'insights'
+                      ? 'bg-white text-slate-900 shadow-sm'
+                      : 'text-slate-500 hover:text-slate-900'
+                  }`}
+                >
+                  <BrainCircuit className="w-3.5 h-3.5" />
+                  Coach Insights
+                </button>
+              </>
+            )}
           </nav>
         )}
 
@@ -113,7 +120,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 Practice Cash
               </span>
               <span className="text-sm font-black text-slate-800">
-                ${availableBalance.toLocaleString()}
+                ₹{availableBalance.toLocaleString()}
               </span>
             </div>
           ) : (
@@ -139,33 +146,39 @@ export const Navbar: React.FC<NavbarProps> = ({
             <Compass className="w-4 h-4" />
             Explore
           </button>
-          <button
-            onClick={() => onNavigate('walkthrough')}
-            className={`flex-1 py-3 flex flex-col items-center gap-0.5 cursor-pointer ${
-              currentScreen === 'walkthrough' ? 'text-brand-indigo' : 'text-slate-400'
-            }`}
-          >
-            <BookOpen className="w-4 h-4" />
-            Guide
-          </button>
-          <button
-            onClick={() => onNavigate('dashboard')}
-            className={`flex-1 py-3 flex flex-col items-center gap-0.5 cursor-pointer ${
-              currentScreen === 'dashboard' ? 'text-brand-indigo' : 'text-slate-400'
-            }`}
-          >
-            <LayoutDashboard className="w-4 h-4" />
-            Dashboard
-          </button>
-          <button
-            onClick={() => onNavigate('insights')}
-            className={`flex-1 py-3 flex flex-col items-center gap-0.5 cursor-pointer ${
-              currentScreen === 'insights' ? 'text-brand-indigo' : 'text-slate-400'
-            }`}
-          >
-            <BrainCircuit className="w-4 h-4" />
-            Insights
-          </button>
+          {!isJourneyDone && (
+            <button
+              onClick={() => onNavigate('walkthrough')}
+              className={`flex-1 py-3 flex flex-col items-center gap-0.5 cursor-pointer ${
+                currentScreen === 'walkthrough' ? 'text-brand-indigo' : 'text-slate-400'
+              }`}
+            >
+              <BookOpen className="w-4 h-4" />
+              Guide
+            </button>
+          )}
+          {isJourneyDone && (
+            <>
+              <button
+                onClick={() => onNavigate('dashboard')}
+                className={`flex-1 py-3 flex flex-col items-center gap-0.5 cursor-pointer ${
+                  currentScreen === 'dashboard' ? 'text-brand-indigo' : 'text-slate-400'
+                }`}
+              >
+                <LayoutDashboard className="w-4 h-4" />
+                Dashboard
+              </button>
+              <button
+                onClick={() => onNavigate('insights')}
+                className={`flex-1 py-3 flex flex-col items-center gap-0.5 cursor-pointer ${
+                  currentScreen === 'insights' ? 'text-brand-indigo' : 'text-slate-400'
+                }`}
+              >
+                <BrainCircuit className="w-4 h-4" />
+                Insights
+              </button>
+            </>
+          )}
         </div>
       )}
     </header>

@@ -1,19 +1,46 @@
 import { useState } from 'react';
-import type { UserProfile, PortfolioItem, Investment } from './types';
+import type { UserProfile, PortfolioItem, Investment, ExperienceChoice } from './types';
 import { Navbar } from './components/Navbar';
 import { Onboarding } from './components/Onboarding';
 import { InvestmentExplorer } from './components/InvestmentExplorer';
 import { UnderstandAsset } from './components/UnderstandAsset';
 import { Walkthrough } from './components/Walkthrough';
-import { Simulator } from './components/Simulator';
 import { ReadinessCheck } from './components/ReadinessCheck';
 import { Dashboard } from './components/Dashboard';
 import { Insights } from './components/Insights';
 import { Play, Info } from 'lucide-react';
 
 function App() {
-  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
-  const [currentScreen, setCurrentScreen] = useState<string>('onboarding');
+  // Initialize state from LocalStorage
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(() => {
+    const onboardingChoice = localStorage.getItem('investwise_onboarding_completed') as ExperienceChoice | null;
+    if (!onboardingChoice) return null;
+    return {
+      experienceType: onboardingChoice,
+      riskProfile: onboardingChoice === 'I want to learn investing'
+        ? 'Conservative'
+        : onboardingChoice === 'I want to start investing'
+        ? 'Moderate'
+        : 'Aggressive'
+    };
+  });
+
+  const [journeyCompleted, setJourneyCompleted] = useState<boolean>(() => {
+    return localStorage.getItem('investwise_journey_completed') === 'true';
+  });
+
+  const [currentScreen, setCurrentScreen] = useState<string>(() => {
+    const onboardingChoice = localStorage.getItem('investwise_onboarding_completed');
+    const journeyDone = localStorage.getItem('investwise_journey_completed') === 'true';
+    if (onboardingChoice && journeyDone) {
+      return 'dashboard';
+    } else if (onboardingChoice) {
+      return 'explorer';
+    } else {
+      return 'onboarding';
+    }
+  });
+
   const [portfolio, setPortfolio] = useState<PortfolioItem[]>([]);
   const [availableBalance, setAvailableBalance] = useState<number>(10000);
   const [selectedInvestment, setSelectedInvestment] = useState<Investment | null>(null);
@@ -25,7 +52,15 @@ function App() {
     setUserProfile(profile);
     setAvailableBalance(10000); // Reset practice account balance
     setPortfolio([]); // Reset holdings
-    setCurrentScreen('explorer');
+    
+    // Determine screen based on journey status
+    const journeyDone = localStorage.getItem('investwise_journey_completed') === 'true';
+    setJourneyCompleted(journeyDone);
+    if (journeyDone) {
+      setCurrentScreen('dashboard');
+    } else {
+      setCurrentScreen('explorer');
+    }
   };
 
   const handleSelectInvestment = (investment: Investment) => {
@@ -75,6 +110,7 @@ function App() {
   };
 
   const handleRedoOnboarding = () => {
+    localStorage.removeItem('investwise_onboarding_completed');
     setUserProfile(null);
     setPortfolio([]);
     setAvailableBalance(10000);
@@ -116,7 +152,10 @@ function App() {
         availableBalance={availableBalance}
         beginnerMode={beginnerMode}
         onToggleBeginnerMode={() => setBeginnerMode(!beginnerMode)}
-        onNavigate={setCurrentScreen}
+        onNavigate={(screen) => {
+          if (!userProfile) return;
+          setCurrentScreen(screen);
+        }}
       />
 
       {/* Main Educational Application Body */}
@@ -132,7 +171,6 @@ function App() {
         {/* Investment Explorer (Discovery) */}
         {currentScreen === 'explorer' && userProfile && (
           <InvestmentExplorer
-            userRiskProfile={userProfile.riskProfile}
             onSelectInvestment={handleSelectInvestment}
             beginnerMode={beginnerMode}
           />
@@ -142,10 +180,15 @@ function App() {
         {currentScreen === 'understand' && selectedInvestment && userProfile && (
           <UnderstandAsset
             investment={selectedInvestment}
+            availableBalance={availableBalance}
+            journeyCompleted={journeyCompleted}
             beginnerMode={beginnerMode}
             onBack={() => setCurrentScreen('explorer')}
-            onContinue={() => setCurrentScreen('simulator')}
-            onGoToWalkthrough={() => setCurrentScreen('walkthrough')}
+            onStartJourney={() => setCurrentScreen('walkthrough')}
+            onAllocateFunds={(amount) => {
+              setInvestmentAmount(amount);
+              setCurrentScreen('readiness');
+            }}
           />
         )}
 
@@ -153,21 +196,10 @@ function App() {
         {currentScreen === 'walkthrough' && (
           <Walkthrough 
             beginnerMode={beginnerMode} 
-            onClose={() => setCurrentScreen('explorer')} 
-          />
-        )}
-
-        {/* Investment Simulator */}
-        {currentScreen === 'simulator' && selectedInvestment && userProfile && (
-          <Simulator
-            investment={selectedInvestment}
-            availableBalance={availableBalance}
-            beginnerMode={beginnerMode}
-            onBack={() => setCurrentScreen('understand')}
-            onContinue={(amount) => {
-              setInvestmentAmount(amount);
-              setCurrentScreen('readiness');
-            }}
+            onComplete={() => {
+              setJourneyCompleted(true);
+              setCurrentScreen('dashboard');
+            }} 
           />
         )}
 
@@ -177,7 +209,7 @@ function App() {
             investment={selectedInvestment}
             amount={investmentAmount}
             beginnerMode={beginnerMode}
-            onBack={() => setCurrentScreen('simulator')}
+            onBack={() => setCurrentScreen('understand')}
             onConfirm={handleConfirmInvestment}
           />
         )}
@@ -220,6 +252,7 @@ function App() {
               beginnerMode={beginnerMode}
               onSellHolding={handleSellHolding}
               onResetPortfolio={handleResetPortfolio}
+              onNavigateToExplore={() => setCurrentScreen('explorer')}
             />
 
             {/* Profile Reset Box */}

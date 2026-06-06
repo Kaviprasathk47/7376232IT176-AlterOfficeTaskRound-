@@ -81,6 +81,15 @@
   }
 }
 
+@keyframes slideUpBottom {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
 .animate-slide-up {
   animation: slideUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
@@ -88,3 +97,27 @@
 .animate-fade-in {
   animation: fadeIn 0.35s ease-out forwards;
 }
+
+.animate-slide-up-bottom {
+  animation: slideUpBottom 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Premium Accordion & Timeline Utilities */
+.accordion-enter {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+}
+.accordion-enter-active {
+  max-height: 200px;
+}
+
+.timeline-line {
+  position: absolute;
+  left: 24px;
+  top: 36px;
+  bottom: 36px;
+  width: 2px;
+  @apply bg-slate-100;
+}
+

@@ -9,24 +9,15 @@ export const mockInvestments: Investment[] = [
     returnMax: 5,
     lossMin: 0,
     lossMax: 1.5,
-    description: 'Loans to the government. Extremely safe, but growth is slower and might not beat inflation.',
-    longDescription: 'Government Bond Funds pool money to buy debt securities issued by stable governments. Because governments rarely fail to pay their debts, these are some of the safest investments available. However, because they are so safe, they pay low interest rates. In years with high inflation, your purchasing power might actually decrease even though you did not lose your principal.',
+    description: 'Loans to the government. Safe interest growth, but slower.',
+    longDescription: 'Government Bonds pool money to buy debt securities issued by stable countries. Historically, they protect capital with minimal downturn risk.',
     category: 'Fixed Income',
     assetType: 'Bonds',
-    whatIsIt: 'Government bonds are like loans you make to a country\'s government. In return, the government promises to pay you a fixed rate of interest over a set period and return your original cash at the end.',
-    whyInvest: 'People invest in government bonds to protect their savings from stock market volatility and to receive a reliable, predictable stream of interest payments.',
-    riskExplanation: 'While stable governments rarely fail to pay back debt, the main threat is Inflation Risk. If inflation rises higher than your interest rate, your money loses purchasing power over time.',
-    suitableInvestor: 'Best for conservative savers, first-time investors who prioritize safety over high returns, or people who will need their money back soon.',
-    advantages: [
-      'Extremely safe with near-zero chance of losing your original money.',
-      'Guaranteed, reliable interest payments.',
-      'Protects your cash during stock market recessions and volatility.'
-    ],
-    disadvantages: [
-      'Very low returns that may fail to beat rising prices of goods (inflation).',
-      'Lower potential for exponential growth over long periods.',
-      'Locked up for fixed periods unless sold early, which can carry minor fees.'
-    ]
+    whatIsIt: 'Bonds are like lending money to a country\'s government. The government promises to pay you back your principal after a set time, plus pay a fixed interest rate regularly.',
+    whyInvest: 'People choose bonds to keep their money safe from stock market crashes and earn a reliable, predictable source of passive interest.',
+    potentialBenefits: 'Extremely safe with virtually zero chance of capital loss; guaranteed interest payments.',
+    potentialRisks: 'Low returns that might not beat inflation (rising store prices), meaning your money could lose buying power over time.',
+    expectedBehavior: 'Very stable. Your balance will grow on a slow, flat line with almost zero daily changes.'
   },
   {
     id: 'index-fund',
@@ -36,24 +27,15 @@ export const mockInvestments: Investment[] = [
     returnMax: 11,
     lossMin: 5,
     lossMax: 18,
-    description: 'Invests in the top 500 largest US companies. Matches overall market growth with moderate volatility.',
-    longDescription: 'An Index Fund tracks a market index like the S&P 500, spreading your money across hundreds of established public corporations (like Apple, Microsoft, and Amazon). This diversification means you are not reliant on a single company. While index funds have historically grown over long periods, they will drop when the general economy experiences recessions, commonly losing 10% to 20% in bad years.',
+    description: 'Invests in the top 500 largest US companies. Matches market growth.',
+    longDescription: 'An Index Fund tracks a stock market index like the S&P 500. Spreads risk across 500 of the largest corporations.',
     category: 'Equities',
     assetType: 'Stocks',
-    whatIsIt: 'An Index Fund pools money from many investors to buy stocks in a large predefined list of companies—in this case, the top 500 largest public corporations in the US (like Apple, Google, and Nvidia).',
-    whyInvest: 'It allows you to own a small slice of hundreds of successful companies simultaneously, meaning you don\'t have to gamble on picking individual stock winners.',
-    riskExplanation: 'While diversified, index funds move with the general economy. If the stock market drops during a recession, the value of your index fund will drop along with it, leading to temporary losses.',
-    suitableInvestor: 'Suitable for moderate investors who want steady growth over 5+ years and are comfortable with moderate, temporary ups and downs.',
-    advantages: [
-      'Spreads risk across hundreds of major companies automatically (diversification).',
-      'Historically beats inflation and generates solid wealth over long periods.',
-      'Extremely low management fees compared to actively managed funds.'
-    ],
-    disadvantages: [
-      'Your balance will drop during general market recessions (economic risk).',
-      'Cannot beat the market averages—you only match it.',
-      'Not designed for quick, short-term profits.'
-    ]
+    whatIsIt: 'An Index Fund pools your money to buy shares in hundreds of established companies (like Google, Apple, and Nvidia) at the same time.',
+    whyInvest: 'People choose index funds to automatically diversify their money, growing with the global economy without picking individual stock winners.',
+    potentialBenefits: 'Spreads risk across 500 companies automatically; historically beats inflation and grows over long periods.',
+    potentialRisks: 'Subject to general economic downturns. If the entire stock market crashes during a recession, your index fund will crash along with it.',
+    expectedBehavior: 'Steady long-term growth, but with moderate swings. It is common to see values fluctuate by 10-20% in normal years.'
   },
   {
     id: 'tech-fund',
@@ -63,24 +45,15 @@ export const mockInvestments: Investment[] = [
     returnMax: 24,
     lossMin: 15,
     lossMax: 42,
-    description: 'Invests in high-growth companies (AI, cloud, tech). High profit potential but prone to sharp drops.',
-    longDescription: 'Technology Growth Funds focus on fast-growing companies in sectors like AI, software, and semiconductor chips. These companies reinvest their profits rather than paying dividends, driving high capital appreciation during market booms. However, tech stocks are highly volatile, highly valued, and sensitive to economic trends, regulatory changes, and shifts in interest rates, which can trigger quick, severe sell-offs.',
+    description: 'Invests in fast-growing tech companies. Higher upside but volatile.',
+    longDescription: 'Technology Growth Funds focus on innovation sectors like AI, cloud, and chips. Higher capital gains, but high volatility.',
     category: 'Growth Sector',
     assetType: 'Stocks',
-    whatIsIt: 'A Technology Fund is a collection of stocks focused exclusively on fast-growing tech industries, including Artificial Intelligence, software development, cloud computing, and hardware manufacturers.',
-    whyInvest: 'Investors seek higher returns by investing in the fastest-growing and most innovative sector of the modern global economy.',
-    riskExplanation: 'Tech stocks are highly sensitive to investor sentiment, changes in government interest rates, and regulatory laws, which can trigger sudden, sharp sell-offs.',
-    suitableInvestor: 'Best for aggressive investors with a long time horizon (10+ years) who can tolerate seeing their balance drop during tech corrections.',
-    advantages: [
-      'Access to rapid, high-growth potential from sector leaders.',
-      'Exposure to ground-breaking technologies like AI and blockchain.',
-      'Reinvests earnings to fuel fast expansion rather than paying small dividends.'
-    ],
-    disadvantages: [
-      'High volatility with frequent, sudden drops in value.',
-      'Vulnerable to specific tech sector crashes (like the dot-com bubble).',
-      'Stocks are often priced very high relative to their actual current earnings.'
-    ]
+    whatIsIt: 'A Technology Fund pools capital to buy shares specifically in technology-focused companies (such as Artificial Intelligence or software firms).',
+    whyInvest: 'People choose tech funds to ride the wave of technological innovation, seeking maximum growth from fast-expanding industries.',
+    potentialBenefits: 'Higher long-term growth potential; quick capital appreciation when the tech sector is booming.',
+    potentialRisks: 'Prices may fluctuate more than other investments. Sensitive to high interest rates and regulatory law changes.',
+    expectedBehavior: 'Fast-moving. Your balance will ride a roller-coaster, experiencing double-digit gains during booms, but steep corrections during sector drops.'
   },
   {
     id: 'growth-stocks',
@@ -90,23 +63,14 @@ export const mockInvestments: Investment[] = [
     returnMax: 38,
     lossMin: 25,
     lossMax: 65,
-    description: 'Individual high-growth company shares. Outsized profit potential, but extreme risk of losing capital.',
-    longDescription: 'Growth stocks represent ownership in individual companies that are expected to grow their sales and profits much faster than the average business. While successful growth stocks can double or triple in value, individual businesses face high failure rates, product failures, or competitive disruption, meaning you can lose a significant portion of your investment if the company falters.',
+    description: 'Shares in individual high-growth companies. Highest risk.',
+    longDescription: 'Individual company shares that grow faster than market averages. Maximum volatility and risk of capital loss.',
     category: 'Individual Equities',
     assetType: 'Stocks',
-    whatIsIt: 'Buying individual growth stocks means purchasing shares in specific companies that are expanding sales and profits at a rapid rate (such as early-stage electric vehicle makers or biotech firms).',
-    whyInvest: 'Investors hope to buy the next big corporate giant early, aiming to multiply their initial money several times over.',
-    riskExplanation: 'Because you are investing in a single business rather than a diversified group, you face extreme Concentration Risk. If that specific company fails, your investment can vanish.',
-    suitableInvestor: 'Only suitable for aggressive, risk-tolerant individuals who have extra cash they are comfortable losing entirely in search of high returns.',
-    advantages: [
-      'Outsized, unlimited profit potential if the chosen company succeeds.',
-      'Direct ownership of disruptive, exciting businesses you believe in.',
-      'Highly liquid; can be sold in seconds on the stock exchange.'
-    ],
-    disadvantages: [
-      'Extreme concentration risk; no safety net of other stocks.',
-      'High failure rates; many hyped companies crash and never recover.',
-      'High volatility driven by market rumors, quarterly earnings reports, and news.'
-    ]
+    whatIsIt: 'Growth stocks represent shares of ownership in single, fast-growing companies that reinvest profits to fuel quick sales expansions.',
+    whyInvest: 'People choose growth stocks to search for the next massive corporate success story, hoping to double or triple their money quickly.',
+    potentialBenefits: 'Outsized, rapid profit potential if the single chosen company succeeds and dominates the market.',
+    potentialRisks: 'High concentration risk. Since you are not diversified, if the company falters, you could lose up to 65% of your money.',
+    expectedBehavior: 'Extremely volatile. The share price is driven by news, rumors, and quarterly earnings, leading to massive swings up and down.'
   }
 ];
